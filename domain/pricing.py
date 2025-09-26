@@ -58,7 +58,6 @@ class CompositeStrategy(PricingStrategy):
             subtotal = strategy.apply(subtotal, items)
         return subtotal
 
-    # TODO: Implement method that applies each strategy in sequence, using the output of one as input to the next
 
 
 def compute_subtotal(items: list[LineItem]) -> float:

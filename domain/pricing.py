@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from typing import List
 
-
 @dataclass(frozen=True)
 class LineItem:
     sku: str
@@ -13,14 +12,14 @@ class LineItem:
 
 class PricingStrategy(ABC):
     @abstractmethod
-    def apply(self, subtotal: float, items:Lists[LineItem]):
+    def apply(self, subtotal:float, items:List[LineItem])->float:
         pass
 
 
 class NoDiscount(PricingStrategy):
     def apply(self, subtotal, items):
         return subtotal
-        
+
 
 class PercentageDiscount(PricingStrategy):
     def __init__(self, percent: float) -> None:
@@ -29,7 +28,7 @@ class PercentageDiscount(PricingStrategy):
 
     # TODO: Implement the main calculation method that reduces the input by a percentage
     def apply(self, subtotal, items):
-        total = subtotal * (1 - self.percent / 100)
+        total = subtotal * (1 - self.percent / 100) 
         return round(total, 2)
 
 class BulkItemDiscount(PricingStrategy):
@@ -44,12 +43,14 @@ class BulkItemDiscount(PricingStrategy):
     def apply(self, subtotal, items):
         for item in items:
             if (item.sku == self.sku) and item.qty >= (self.threshold):
-                subtotal -= item.qty * self.per_item_off * item.unit_price
+                subtotal -= item.qty * self.per_item_off
         return subtotal
+            
+
 
 class CompositeStrategy(PricingStrategy):
     """Compose multiple strategies; apply in order."""
-    def __init__(self, strategies: list[PricingStrategy]) -> None:
+    def __init__(self, strategies: List[PricingStrategy]) -> None:
         # TODO: Store the collection of strategies to be applied sequentially
         self.strategies = strategies
 
